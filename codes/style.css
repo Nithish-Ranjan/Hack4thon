@@ -1,31 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
 body {
-  font-family: Arial;
-  padding: 30px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
 }
 
-h2 {
-  color: #333;
+.container {
+    width: 400px;
+    text-align: center;
 }
 
-input {
-  padding: 10px;
-  width: 300px;
-  margin-right: 10px;
+h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
 }
 
-button {
-  padding: 10px 20px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
+.subtitle {
+    opacity: 0.8;
+    margin-bottom: 20px;
 }
 
-button:hover {
-  background: #45a049;
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.card input {
+    width: 90%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 15px;
+    font-size: 16px;
+    outline: none;
+}
+
+.card button {
+    width: 95%;
+    padding: 12px;
+    background: #22c55e;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card button:hover {
+    background: #16a34a;
 }
 
 #result {
-  margin-top: 20px;
-  font-size: 18px;
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.safe {
+    color: #00ff90;
+    font-weight: bold;
+}
+
+.danger {
+    color: #ff4b4b;
+    font-weight: bold;
+}
+/* Toggle button */
+#toggleMode {
+    margin-bottom: 15px;
+    padding: 8px 15px;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+#toggleMode:hover {
+    opacity: 0.8;
+}
+
+/* Light mode background */
+.light-mode {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb) !important;
+    color: black !important;
+}
+
+.light-mode .card {
+    background: rgba(0,0,0,0.05);
+    color: black;
+}
+
+.light-mode #toggleMode {
+    background: black;
+    color: white;
+}
+
+.light-mode .safe {
+    color: #16a34a;
+}
+
+.light-mode .danger {
+    color: #dc2626;
 }
