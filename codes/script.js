@@ -1,37 +1,54 @@
 function checkPhishing(url) {
     let reasons = [];
 
+    let cleanURL = url.trim();
+
+    // Ensure URL has protocol
+    if (!cleanURL.startsWith("http://") && !cleanURL.startsWith("https://")) {
+        cleanURL = "https://" + cleanURL;
+    }
+
+    let hostname = "";
+    try {
+        hostname = new URL(cleanURL).hostname;
+    } catch {
+        return {
+            isPhishing: true,
+            reasons: ["Invalid URL format"]
+        };
+    }
+
     // 1. Suspicious keywords
     const badWords = ["free", "win", "bonus", "money", "gift", "offer"];
     badWords.forEach(word => {
-        if (url.toLowerCase().includes(word)) {
+        if (cleanURL.toLowerCase().includes(word)) {
             reasons.push(`Contains suspicious keyword: "${word}"`);
         }
     });
 
     // 2. Very long URL
-    if (url.length > 70) {
+    if (cleanURL.length > 70) {
         reasons.push("URL is unusually long");
     }
 
     // 3. Contains '@'
-    if (url.includes("@")) {
+    if (cleanURL.includes("@")) {
         reasons.push("Contains '@' symbol (used to hide real domain)");
     }
 
     // 4. No HTTPS
-    if (!url.startsWith("https://")) {
-        reasons.push("URL is not HTTPS (unsafe)");
+    if (!cleanURL.startsWith("https://")) {
+        reasons.push("URL is not HTTPS (less secure)");
     }
 
     // 5. IP address as domain
-    const ipPattern = /https?:\/\/\d{1,3}(\.\d{1,3}){3}/;
-    if (ipPattern.test(url)) {
-        reasons.push("IP address used instead of domain");
+    const ipPattern = /^\d{1,3}(\.\d{1,3}){3}$/;
+    if (ipPattern.test(hostname)) {
+        reasons.push("Uses raw IP address instead of domain name");
     }
 
     // 6. Too many subdomains
-    const domainParts = url.split(".");
+    const domainParts = hostname.split(".");
     if (domainParts.length > 4) {
         reasons.push("Too many subdomains (common in phishing)");
     }
@@ -39,23 +56,23 @@ function checkPhishing(url) {
     // 7. Suspicious TLDs
     const badTLD = [".xyz", ".click", ".gift", ".top", ".loan", ".work"];
     badTLD.forEach(tld => {
-        if (url.endsWith(tld)) {
+        if (hostname.endsWith(tld)) {
             reasons.push(`Suspicious domain extension: ${tld}`);
         }
     });
 
     // 8. Numbers replacing letters
-    if (/[a-zA-Z]+\d+[a-zA-Z]+/.test(url)) {
+    if (/[a-zA-Z]+\d+[a-zA-Z]+/.test(hostname)) {
         reasons.push("Domain contains unusual number patterns");
     }
 
-    // 9. Encoding characters
-    if (/[%=]/.test(url)) {
+    // 9. Encoded characters
+    if (/[%=]/.test(cleanURL)) {
         reasons.push("Contains encoded characters (% or =)");
     }
 
-    // 10. Repeated letters
-    if (/(.)\1\1/.test(url)) {
+    // 10. Repeated characters
+    if (/(.)\1\1/.test(hostname)) {
         reasons.push("Contains repeated characters (spam pattern)");
     }
 
@@ -78,18 +95,19 @@ function analyzeURL() {
 
     if (data.isPhishing) {
         resultDiv.innerHTML = `
-            <p class='danger'>⚠️ Phishing detected!</p>
+            <p class='danger'>⚠️ Warning! URL may be dangerous</p>
             <ul>${data.reasons.map(r => `<li>${r}</li>`).join("")}</ul>
         `;
     } else {
         resultDiv.innerHTML = `<p class='safe'>✔️ URL appears safe!</p>`;
     }
 }
-// Dark Mode Toggle
-document.getElementById("toggleMode").addEventListener("click", () => {
-    document.body.classList.toggle("light-mode");
 
-    const btn = document.getElementById("toggleMode");
+// Dark / Light Mode Toggle
+const btn = document.getElementById("toggleMode");
+
+btn.addEventListener("click", () => {
+    document.body.classList.toggle("light-mode");
 
     if (document.body.classList.contains("light-mode")) {
         btn.textContent = "🌙 Dark Mode";
